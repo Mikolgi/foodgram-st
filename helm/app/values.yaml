@@ -1,0 +1,22 @@
+global:
+  secret:
+    name: db-secret
+  config:
+    name: db-config
+  mediaPvc:
+    name: media-pvc
+  staticPvc:
+    name: static-pvc
+  serviceName:
+    front: foodgram-frontend-service
+
+postgres:
+  secrets:
+    postgres-password: ref+vault://secrets/db#/postgres-password
+    postgres-user: ref+vault://secrets/db#/postgres-user
+    postgres-name: ref+vault://secrets/db#/postgres-name
+
+ingress:
+  host: foodgram.local
+  port:
+    number: 80
