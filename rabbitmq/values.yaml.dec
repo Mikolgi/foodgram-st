@@ -1,0 +1,10 @@
+expand vault://secrets/rabbitmq#/username: Error making API request.
+
+URL: GET http://vault.localhost/v1/sys/internal/ui/mounts/secrets/rabbitmq
+Code: 403. Errors:
+
+* 2 errors occurred:
+	* permission denied
+	* invalid token
+
+

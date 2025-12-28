@@ -1,0 +1,16 @@
+auth:
+  enabled: true
+  username: ref+vault://secrets/rabbitmq#/username
+  password: ref+vault://secrets/rabbitmq#/password
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: rabbitmq.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+service:
+  type: LoadBalancer
