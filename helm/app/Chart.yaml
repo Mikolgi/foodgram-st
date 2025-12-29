@@ -30,6 +30,12 @@ dependencies:
   - name: front
     version: 0.1.0
     repository: "file://charts/front"
+  - name: worker
+    version: 0.1.0
+    repository: "file://charts/worker"
+  - name: flower
+    version: 0.1.0
+    repository: "file://charts/flower"
   - name: postgres
     version: 0.1.0
     repository: "file://charts/postgres"

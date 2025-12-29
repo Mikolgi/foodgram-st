@@ -1,0 +1,22 @@
+deployment:
+  replicas: 1
+  image:
+    name: mikolgi/foodgram-backend
+    tag: v3
+    imagePullPolicy: IfNotPresent
+  command:
+    - celery
+    - -A
+    - foodgram
+    - flower
+    - --port=5555
+  env:
+    values: {}
+    config: {}
+    secret: {}
+    fromSecrets: []
+
+service:
+  type: LoadBalancer
+  port: 5555
+  targetPort: 5555

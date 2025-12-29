@@ -18,6 +18,13 @@ spec:
         image: {{ printf "%s:%s" .name .tag }}
         {{- end }}
         command: ["python",  "manage.py", "import_data"]
+        {{- if .Values.deployment.env.fromSecrets }}
+        envFrom:
+        {{- range $secret := .Values.deployment.env.fromSecrets }}
+        - secretRef:
+            name: {{ $secret }}
+        {{- end }}
+        {{- end }}
         env:
         {{- range $key, $val := .Values.deployment.env.config }}
         - name: {{ $key }}

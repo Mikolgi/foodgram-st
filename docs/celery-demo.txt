@@ -1,0 +1,56 @@
+Celery demo runbook (minikube)
+
+1) Start minikube and tunnel
+   minikube start
+   minikube tunnel
+
+2) Ensure ingress host resolves (Windows hosts file)
+   notepad C:\Windows\System32\drivers\etc\hosts
+   Add line:
+   127.0.0.1 foodgram.local
+
+3) (If you need to re-deploy) helm upgrade with vault values
+   # From repo root, PowerShell
+   $lines = Get-Content helm\.env
+   foreach ($line in $lines) {
+     if ($line -match '^(?<k>[^=]+)=(?<v>.*)$') {
+       Set-Item -Path Env:$($Matches.k) -Value $Matches.v
+     }
+   }
+   vals eval -f helm\app\values.yaml | Set-Content -Path helm\app\values.rendered.yaml
+   helm upgrade --install foodgram helm\app -n foodgram -f helm\app\values.rendered.yaml
+   Remove-Item helm\app\values.rendered.yaml
+
+4) Open Flower
+   http://foodgram.local:5555
+
+5) Get auth token
+   curl -X POST http://foodgram.local/api/auth/token/login/ ^
+     -H "Content-Type: application/json" ^
+     -d "{\"email\":\"YOUR_EMAIL\",\"password\":\"YOUR_PASSWORD\"}"
+
+6) Run tasks
+   curl -X POST http://foodgram.local/api/tasks/holidays/ ^
+     -H "Authorization: Token YOUR_TOKEN" ^
+     -H "Content-Type: application/json" ^
+     -d "{\"country\":\"US\",\"year\":2025,\"month\":12,\"day\":25}"
+
+   curl -X POST http://foodgram.local/api/tasks/weather/ ^
+     -H "Authorization: Token YOUR_TOKEN" ^
+     -H "Content-Type: application/json" ^
+     -d "{\"query\":\"New York\"}"
+
+7) Check task status
+   curl http://foodgram.local/api/tasks/TASK_ID/status/ ^
+     -H "Authorization: Token YOUR_TOKEN"
+
+Where results are saved
+- Task output is saved inside the Celery worker container under "api_results/".
+- To inspect it:
+  kubectl get pods -n foodgram -l app.kubernetes.io/name=worker
+  kubectl exec -n foodgram <worker_pod_name> -- ls -la /app/api_results
+  kubectl exec -n foodgram <worker_pod_name> -- cat /app/api_results/holidays_US_2025_12_25.json
+  kubectl cp -n foodgram <worker_pod_name>:/app/api_results ./api_results
+
+Note: api_results are stored inside the pod filesystem. If the pod is restarted,
+the files are lost unless you add a persistent volume.

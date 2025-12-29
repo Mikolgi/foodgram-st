@@ -3,7 +3,8 @@ from rest_framework import routers
 
 from api.views import (IngredientViewSet,
                        ListSubscribeViewSet, RecipeViewSet,
-                       download_shopping_cart, favorite, shopping, subscribe)
+                       download_shopping_cart, favorite, run_api_task,
+                       shopping, subscribe, task_status)
 
 router_v1 = routers.DefaultRouter()
 
@@ -18,6 +19,8 @@ function_urls = [
     path('recipes/<int:recipe_id>/favorite/', favorite, name='favorite'),
     path('users/<int:user_id>/subscribe/', subscribe, name='subscribe'),
     path('recipes/<int:recipe_id>/shopping_cart/', shopping, name='shopping'),
+    path('tasks/<str:task_name>/', run_api_task, name='run_api_task'),
+    path('tasks/<str:task_id>/status/', task_status, name='task_status'),
 
 ]
 

@@ -17,6 +17,32 @@ spec:
         volumeMounts:
         - name: {{ .Chart.Name }}-static
           mountPath: {{ .Values.jobCollectstatic.mountPath }}
+        {{- if .Values.deployment.env.fromSecrets }}
+        envFrom:
+        {{- range $secret := .Values.deployment.env.fromSecrets }}
+        - secretRef:
+            name: {{ $secret }}
+        {{- end }}
+        {{- end }}
+        env:
+        {{- range $key, $val := .Values.deployment.env.config }}
+        - name: {{ $key }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ $.Values.global.config.name }}
+              key: {{ $val }}
+        {{- end }}
+        {{- range $key, $val := .Values.deployment.env.secret }}
+        - name: {{ $key }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ $.Values.global.secret.name }}
+              key: {{ $val }}
+        {{- end }}
+        {{- range $key, $val := .Values.deployment.env.values }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+        {{- end }}
       restartPolicy: {{ .Values.jobCollectstatic.restartPolicy }}
 
       volumes:

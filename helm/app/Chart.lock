@@ -5,8 +5,14 @@ dependencies:
 - name: front
   repository: file://charts/front
   version: 0.1.0
+- name: worker
+  repository: file://charts/worker
+  version: 0.1.0
+- name: flower
+  repository: file://charts/flower
+  version: 0.1.0
 - name: postgres
   repository: file://charts/postgres
   version: 0.1.0
-digest: sha256:9c2c4f312372d28d570f118cbf024b5d2888ee6360a76626e9d5ccfb0dfcf12f
-generated: "2025-11-04T20:11:29.447323+03:00"
+digest: sha256:5f088f4c0226019712de241448c299cf06cc1b73d8a24c106c1a516af83bc965
+generated: "2025-12-29T17:36:38.8281021+03:00"

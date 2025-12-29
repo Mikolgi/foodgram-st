@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.conf import settings
 from djoser.views import UserViewSet
+from celery.result import AsyncResult
 from rest_framework import permissions, status, viewsets, mixins
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -16,10 +17,15 @@ from api.serializers import (CustomUserSerializer, FavoriteSerializer,
                              FollowSerializer, IngredientRecipe,
                              IngredientSerializer, RecipeSerializer,
                              RecipeWriteSerializer, ShoppingCardSerializer)
+from api.tasks import fetch_holidays, fetch_weather
 
 from recipes.models import (Favorite, Follow, Ingredient, Recipe, ShoppingList)
 
 User = get_user_model()
+TASKS_BY_NAME = {
+    "holidays": fetch_holidays,
+    "weather": fetch_weather,
+}
 
 
 class ListRetriveViewSet(
@@ -224,3 +230,28 @@ def download_shopping_cart(request):
     response['Content-Disposition'] = 'attachment; filename={0}'.format(
         filename)
     return response
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def run_api_task(request, task_name):
+    task = TASKS_BY_NAME.get(task_name)
+    if not task:
+        return Response(
+            {"detail": "Unknown task name."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+    async_result = task.delay(request.data or {})
+    return Response({"task_id": async_result.id}, status=status.HTTP_202_ACCEPTED)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def task_status(request, task_id):
+    result = AsyncResult(task_id)
+    payload = {"task_id": task_id, "status": result.status}
+    if result.successful():
+        payload["result"] = result.result
+    elif result.failed():
+        payload["error"] = str(result.result)
+    return Response(payload, status=status.HTTP_200_OK)

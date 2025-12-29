@@ -28,6 +28,13 @@ spec:
           mountPath: {{ .Values.deployment.volumeMounts.staticMountPath }}
         - name: {{ .Chart.Name }}-media
           mountPath: {{ .Values.deployment.volumeMounts.mediaMountPath }}
+        {{- if .Values.deployment.env.fromSecrets }}
+        envFrom:
+        {{- range $secret := .Values.deployment.env.fromSecrets }}
+        - secretRef:
+            name: {{ $secret }}
+        {{- end }}
+        {{- end }}
         env:
         {{- range $key, $val := .Values.deployment.env.config }}
         - name: {{ $key }}

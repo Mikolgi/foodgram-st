@@ -20,3 +20,41 @@ ingress:
   host: foodgram.local
   port:
     number: 80
+
+back:
+  deployment:
+    env:
+      fromSecrets:
+        - api-secrets
+        - rabbitmq-secrets
+      values:
+        RABBITMQ_HOST: my-rabbitmq.rabbitmq
+        RABBITMQ_PORT: "5672"
+
+worker:
+  deployment:
+    env:
+      fromSecrets:
+        - api-secrets
+        - rabbitmq-secrets
+      values:
+        RABBITMQ_HOST: my-rabbitmq.rabbitmq
+        RABBITMQ_PORT: "5672"
+
+flower:
+  deployment:
+    env:
+      fromSecrets:
+        - api-secrets
+        - rabbitmq-secrets
+      values:
+        RABBITMQ_HOST: my-rabbitmq.rabbitmq
+        RABBITMQ_PORT: "5672"
+
+apiSecrets:
+  HOLIDAYS_API_KEY: ref+vault://secrets/api-keys#/holidays_api_key
+  WEATHER_API_KEY: ref+vault://secrets/api-keys#/weather_api_key
+
+rabbitmqSecrets:
+  RABBITMQ_USER: ref+vault://secrets/rabbitmq#/username
+  RABBITMQ_PASSWORD: ref+vault://secrets/rabbitmq#/password
