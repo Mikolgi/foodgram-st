@@ -39,3 +39,7 @@ dependencies:
   - name: postgres
     version: 0.1.0
     repository: "file://charts/postgres"
+  - name: locust
+    version: 0.1.0
+    repository: "file://charts/locust"
+    condition: locust.enabled

@@ -9,6 +9,13 @@ deployment:
   volumeMounts:
     staticMountPath: /app/backend_static/
     mediaMountPath: /app/backend_media/
+  resources:
+    requests:
+      cpu: 150m
+      memory: 96Mi
+    limits:
+      cpu: 180m
+      memory: 128Mi
   env:
     values: {}
     config:

@@ -25,20 +25,20 @@ Celery demo runbook (minikube)
    http://foodgram.local:5555
 
 5) Get auth token
-   curl -X POST http://foodgram.local/api/auth/token/login/ ^
-     -H "Content-Type: application/json" ^
-     -d "{\"email\":\"YOUR_EMAIL\",\"password\":\"YOUR_PASSWORD\"}"
+   curl -X POST http://foodgram.local/api/auth/token/login/ \
+  -H "Content-Type: application/json" \
+  -d "{\"email\":\"555@gmail.com\",\"password\":\"YOUR PASSWORD\"}"
 
 6) Run tasks
-   curl -X POST http://foodgram.local/api/tasks/holidays/ ^
-     -H "Authorization: Token YOUR_TOKEN" ^
-     -H "Content-Type: application/json" ^
-     -d "{\"country\":\"US\",\"year\":2025,\"month\":12,\"day\":25}"
+   curl -X POST http://foodgram.local/api/tasks/holidays/ \
+  -H "Authorization: Token 852750c4bfbabba6fba31e283bf1f7c4a181383c" \
+  -H "Content-Type: application/json" \
+  -d "{\"country\":\"US\",\"year\":2025,\"month\":12,\"day\":25}"
 
-   curl -X POST http://foodgram.local/api/tasks/weather/ ^
-     -H "Authorization: Token YOUR_TOKEN" ^
-     -H "Content-Type: application/json" ^
-     -d "{\"query\":\"New York\"}"
+   curl -X POST http://foodgram.local/api/tasks/weather/ \
+  -H "Authorization: Token 852750c4bfbabba6fba31e283bf1f7c4a181383c" \
+  -H "Content-Type: application/json" \
+  -d "{\"query\":\"New York\"}"
 
 7) Check task status
    curl http://foodgram.local/api/tasks/TASK_ID/status/ ^

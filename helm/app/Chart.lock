@@ -14,5 +14,8 @@ dependencies:
 - name: postgres
   repository: file://charts/postgres
   version: 0.1.0
-digest: sha256:5f088f4c0226019712de241448c299cf06cc1b73d8a24c106c1a516af83bc965
-generated: "2025-12-29T17:36:38.8281021+03:00"
+- name: locust
+  repository: file://charts/locust
+  version: 0.1.0
+digest: sha256:49938e62b54648952408478e3e395fc471bf260d85cb882785a566e89b5148da
+generated: "2026-05-30T19:36:55.0104631+03:00"

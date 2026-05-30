@@ -9,11 +9,19 @@ deployment:
     - -A
     - foodgram
     - worker
+    - --concurrency=2
     - -E
     - -Q
     - holidays,weather
     - -l
     - info
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
   env:
     values: {}
     config: {}

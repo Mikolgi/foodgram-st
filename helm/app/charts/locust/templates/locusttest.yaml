@@ -1,0 +1,42 @@
+{{- if .Values.enabled }}
+apiVersion: locust.io/v1
+kind: LocustTest
+metadata:
+  name: {{ include "locust.testName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "locust.labels" . | indent 4 }}
+spec:
+  image: {{ printf "%s:%s" .Values.test.image.repository .Values.test.image.tag | quote }}
+  imagePullPolicy: {{ .Values.test.image.pullPolicy }}
+  workers: {{ .Values.test.workers }}
+  args: |
+    --host {{ .Values.test.host }}
+    --users {{ .Values.test.users }}
+    --spawn-rate {{ .Values.test.spawnRate }}
+    --run-time {{ .Values.test.runTime }}
+{{- range .Values.test.extraArgs }}
+    {{ . }}
+{{- end }}
+  locustfile:
+    configMap:
+      name: {{ include "locust.locustfileConfigMapName" . }}
+  {{- with .Values.test.env }}
+  env:
+{{ toYaml . | indent 4 }}
+  {{- end }}
+  {{- with .Values.test.labels }}
+  labels:
+{{ toYaml . | indent 4 }}
+  {{- end }}
+  {{- with .Values.test.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+  {{- end }}
+  master:
+    resources:
+{{ toYaml .Values.test.resources.master | indent 6 }}
+  worker:
+    resources:
+{{ toYaml .Values.test.resources.worker | indent 6 }}
+{{- end }}

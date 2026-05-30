@@ -1,0 +1,12 @@
+{{- if .Values.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "locust.locustfileConfigMapName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "locust.labels" . | indent 4 }}
+data:
+  locustfile.py: |
+{{ .Files.Get "files/locustfile.py" | indent 4 }}
+{{- end }}

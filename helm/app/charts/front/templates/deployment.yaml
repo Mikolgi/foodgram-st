@@ -32,6 +32,10 @@ spec:
           mountPath: {{ .Values.deployment.volumes.media.mountPath }}
         - name: {{ .Values.deployment.volumes.static.pvcName }}
           mountPath: {{ .Values.deployment.volumes.static.mountPath }}
+        {{- with .Values.deployment.resources }}
+        resources:
+{{ toYaml . | indent 10 }}
+        {{- end }}
       volumes:
       - name: {{ .Chart.Name }}-nginx-config
         configMap:

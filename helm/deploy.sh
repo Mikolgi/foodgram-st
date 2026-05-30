@@ -4,6 +4,6 @@ set -a
 source .env
 set +a
 
-helm secrets upgrade --install foodgram app \
+vals eval -f app/values.yaml | helm upgrade --install foodgram app \
   -n foodgram \
-  -f app/values.yaml
+  -f -

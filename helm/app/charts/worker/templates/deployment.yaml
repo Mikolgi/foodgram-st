@@ -25,6 +25,10 @@ spec:
         {{- range .Values.deployment.command }}
         - {{ . | quote }}
         {{- end }}
+        {{- with .Values.deployment.resources }}
+        resources:
+{{ toYaml . | indent 10 }}
+        {{- end }}
         {{- if .Values.deployment.env.fromSecrets }}
         envFrom:
         {{- range $secret := .Values.deployment.env.fromSecrets }}

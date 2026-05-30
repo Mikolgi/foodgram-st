@@ -27,6 +27,10 @@ spec:
         volumeMounts:
         - name: {{ .Chart.Name }}-data
           mountPath: {{ .Values.statefulset.mountPath }}
+        {{- with .Values.statefulset.resources }}
+        resources:
+{{ toYaml . | indent 10 }}
+        {{- end }}
         env:
         {{- range $key, $val := .Values.statefulset.env.values }}
         - name: {{ $key }}

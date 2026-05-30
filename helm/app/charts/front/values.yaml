@@ -8,6 +8,13 @@ deployment:
     name: mikolgi/foodgram-frontend
     tag: v1.1
     imagePullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 20m
+      memory: 16Mi
+    limits:
+      cpu: 30m
+      memory: 32Mi
   ports:
     containerPort: 80
   nginxConfig:

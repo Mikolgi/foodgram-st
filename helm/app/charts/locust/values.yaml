@@ -1,0 +1,40 @@
+enabled: false
+
+test:
+  name: foodgram-loadtest
+  image:
+    repository: locustio/locust
+    tag: "2.44.0"
+    pullPolicy: IfNotPresent
+  workers: 2
+  host: http://foodgram-frontend-service.foodgram.svc.cluster.local
+  users: 100
+  spawnRate: 5
+  runTime: 10m
+  extraArgs: []
+  labels: {}
+  annotations: {}
+  env: []
+  resources:
+    master:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 120m
+        memory: 160Mi
+    worker:
+      requests:
+        cpu: 150m
+        memory: 128Mi
+      limits:
+        cpu: 180m
+        memory: 160Mi
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+  host: locust.foodgram.local
+  path: /
+  pathType: Prefix

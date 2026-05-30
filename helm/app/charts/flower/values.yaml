@@ -10,6 +10,13 @@ deployment:
     - foodgram
     - flower
     - --port=5555
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+    limits:
+      cpu: 30m
+      memory: 96Mi
   env:
     values: {}
     config: {}
