@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/Mikolgi/foodgram-st/compare/v1.0.1...v1.0.2) (2026-06-07)
+
+
+### Bug Fixes
+
+* recreate backend jobs ([b9db800](https://github.com/Mikolgi/foodgram-st/commit/b9db80057e65e779bc609a66a5d27bd149da5e75))
+
 ## [1.0.1](https://github.com/Mikolgi/foodgram-st/compare/v1.0.0...v1.0.1) (2026-06-07)
 
 
