@@ -1,0 +1,58 @@
+name: Self-Hosted Runner Smoke
+
+on:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    name: Validate ARC runner
+    runs-on: foodgram-arc-runner
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Configure in-cluster kubeconfig
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.kube"
+          kubectl config set-cluster in-cluster \
+            --server="https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT_HTTPS}" \
+            --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
+            --embed-certs=true
+          kubectl config set-credentials arc-runner \
+            --token="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
+          kubectl config set-context in-cluster \
+            --cluster=in-cluster \
+            --user=arc-runner \
+            --namespace="$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)"
+          kubectl config use-context in-cluster
+
+      - name: Show runner toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker version
+          kubectl get ns
+          helm version
+
+      - name: Check runner RBAC
+        shell: bash
+        run: |
+          set -euo pipefail
+          kubectl auth can-i create deployments -n foodgram
+          kubectl auth can-i create secrets -n foodgram
+
+      - name: Validate Helm chart
+        shell: bash
+        run: |
+          set -euo pipefail
+          helm dependency update helm/app
+          helm lint helm/app
+          helm template foodgram helm/app > /tmp/foodgram-rendered.yaml
