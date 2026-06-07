@@ -242,7 +242,10 @@ def run_api_task(request, task_name):
             status=status.HTTP_404_NOT_FOUND,
         )
     async_result = task.delay(request.data or {})
-    return Response({"task_id": async_result.id}, status=status.HTTP_202_ACCEPTED)
+    return Response(
+        {"task_id": async_result.id},
+        status=status.HTTP_202_ACCEPTED,
+    )
 
 
 @api_view(["GET"])
