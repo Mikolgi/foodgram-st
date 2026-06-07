@@ -219,4 +219,4 @@ jobs:
           FRONTEND_IMAGE_TAG: ${{ needs.release.outputs.release_git_tag }}-${{ env.RELEASE_SUFFIX }}
           VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
-        run: ./helm/deploy-ci.sh
+        run: bash ./helm/deploy-ci.sh
